@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  redis1:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis1_data:/data
+
+  redis2:
+    image: redis:latest
+    ports:
+      - "6380:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis2_data:/data
+
+  redis3:
+    image: redis:latest
+    ports:
+      - "6381:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis3_data:/data
+
+  redis4:
+    image: redis:latest
+    ports:
+      - "6382:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis4_data:/data
+
+  redis5:
+    image: redis:latest
+    ports:
+      - "6383:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis5_data:/data
+
+volumes:
+  redis1_data:
+  redis2_data:
+  redis3_data:
+  redis4_data:
+  redis5_data: 

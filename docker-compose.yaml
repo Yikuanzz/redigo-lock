@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  # 单机 Redis
+  redis:
+    image: redis:7.2
+    container_name: redis-single
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-single-data:/data
+    networks:
+      - redis-net
+
+  # Redis 集群节点
+  redis-1:
+    image: redis:7.2
+    container_name: redis-1
+    ports:
+      - "7001:7001"
+    volumes:
+      - redis-cluster-1:/data
+    command: redis-server --port 7001 --cluster-enabled yes --cluster-config-file nodes.conf --cluster-node-timeout 5000 --appendonly yes
+    networks:
+      - redis-net
+
+  redis-2:
+    image: redis:7.2
+    container_name: redis-2
+    ports:
+      - "7002:7002"
+    volumes:
+      - redis-cluster-2:/data
+    command: redis-server --port 7002 --cluster-enabled yes --cluster-config-file nodes.conf --cluster-node-timeout 5000 --appendonly yes
+    networks:
+      - redis-net
+
+  redis-3:
+    image: redis:7.2
+    container_name: redis-3
+    ports:
+      - "7003:7003"
+    volumes:
+      - redis-cluster-3:/data
+    command: redis-server --port 7003 --cluster-enabled yes --cluster-config-file nodes.conf --cluster-node-timeout 5000 --appendonly yes
+    networks:
+      - redis-net
+
+  # Redis 集群初始化
+  redis-cluster-init:
+    image: redis:7.2
+    container_name: redis-cluster-init
+    networks:
+      - redis-net
+    command: >
+      /bin/sh -c '
+      sleep 5 &&
+      redis-cli --cluster create redis-1:7001 redis-2:7002 redis-3:7003 --cluster-replicas 0 --cluster-yes
+      '
+    depends_on:
+      - redis-1
+      - redis-2
+      - redis-3
+
+volumes:
+  redis-single-data:
+  redis-cluster-1:
+  redis-cluster-2:
+  redis-cluster-3:
+
+networks:
+  redis-net:
+    driver: bridge 
