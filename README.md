@@ -1,6 +1,6 @@
 # Redigo Lock
 
-基于 Redigo 实现的分布式锁 SDK，提供简单易用的 API 和丰富的功能特性。
+基于 go-redis 实现的分布式锁 SDK，提供简单易用的 API 和丰富的功能特性。
 
 ## 功能特性
 
